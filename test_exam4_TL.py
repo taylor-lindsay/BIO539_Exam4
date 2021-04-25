@@ -46,16 +46,25 @@ def test_obs_kmers_3():
   expected_result = 1
   assert actual_result == expected_result
   
-# Test the Main Function: 
+# Test the Linguistic Complexity Function: 
 
-def test_main_1():
+def test_linguistic_complexity_1():
   ex = 'GAAT'
-  actual_result = main(ex)
+  actual_result = linguistic_complexity(ex)
   expected_result = 0.9
   assert actual_result == expected_result
 
-# ACCGAT expected result: 1
-# GGATTTGATT expected result: 41/49 
+def test_linguistic_complexity_2():
+  ex = 'ACCGAT'
+  actual_result = linguistic_complexity(ex)
+  expected_result = 1
+  assert actual_result == expected_result
+  
+def test_linguistic_complexity_3():
+  ex = 'GGATTTGATT'
+  actual_result = linguistic_complexity(ex)
+  expected_result = (41/49)
+  assert actual_result == expected_result
 
   # to run all test scripts run: py.test
   # the def and the file name both have to start with test then be followed by func/file name 

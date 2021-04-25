@@ -28,18 +28,23 @@ def obs_kmers(k, ex):
             count += 1
             unique_list.append(item)
     return(count)
-    
-def main(args):
+
+def linguistic_complexity(ex):
     '''creates a dataframe with k values, observed kmers and possible kmers, returns the linguistic complexity'''
     data = []
-    string = len(args.ex)
+    string = len(ex)
     for i in range(1, string+1):
         k = i
-        data.append([obs_kmers(k, args.ex), poss_kmers(k, args.ex)])
+        data.append([obs_kmers(k, ex), poss_kmers(k, ex)])
     df = pd.DataFrame(data, index = range(1,string+1), columns = ['observed_kmers', 'possible_kmers'])
     df.loc['total']= df.sum() # adds totals to bottom row 
     ling = df.loc['total','observed_kmers'] / df.loc['total','possible_kmers'] 
-    print(ling)
+    return(ling)
+
+    
+def main(args): 
+  out = linguistic_complexity(args.ex)
+  print(out)
     
 if __name__ == '__main__':
   parser = argparse.ArgumentParser()
