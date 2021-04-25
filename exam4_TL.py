@@ -2,6 +2,8 @@
 
 import pandas as pd
 import argparse
+import csv
+import codecs
 
 def poss_kmers(k, ex):
     ''' given a k value, returns the possible number of kmers '''
@@ -29,7 +31,7 @@ def obs_kmers(k, ex):
             unique_list.append(item)
     return(count)
 
-def linguistic_complexity(ex):
+def write_df(ex):
     '''creates a dataframe with k values, observed kmers and possible kmers, returns the linguistic complexity'''
     data = []
     string = len(ex)
@@ -38,17 +40,25 @@ def linguistic_complexity(ex):
         data.append([obs_kmers(k, ex), poss_kmers(k, ex)])
     df = pd.DataFrame(data, index = range(1,string+1), columns = ['observed_kmers', 'possible_kmers'])
     df.loc['total']= df.sum() # adds totals to bottom row 
+    return(df)
+
+def linguistic_complexity(df):
     ling = df.loc['total','observed_kmers'] / df.loc['total','possible_kmers'] 
     return(ling)
-
-    
+  
 def main(args): 
-  out = linguistic_complexity(args.ex)
-  print(out)
+  out = []
+  for i in args.data:
+    df = write_df(i)
+    out = linguistic_complexity(df)
+    #print(i)
+    print(df)
+    print("The linguistic compleixty of", i, "is", out)
+    #print(out)
     
 if __name__ == '__main__':
   parser = argparse.ArgumentParser()
-  parser.add_argument('ex', type = str)
+  parser.add_argument('data', type=argparse.FileType('r')) # the r stands for read
   args = parser.parse_args()
   main(args)
 
