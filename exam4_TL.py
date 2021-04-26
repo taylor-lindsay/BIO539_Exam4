@@ -1,60 +1,62 @@
 #!/usr/bin/env python3
 
+# import required packages 
 import pandas as pd
 import argparse
-import csv
-import codecs
 
 def poss_kmers(k, ex):
-    ''' given a k value, returns the possible number of kmers '''
-    string = len(ex)
-    a = string - k + 1 
-    b = 4**k
-    if a < b:
+    ''' given a k value & sequence string, returns the possible number of kmers '''
+    string = len(ex) #calculates length of string 
+    a = string - k + 1 # one kmer calculation 
+    b = 4**k # the other kmer calculation 
+    if a < b: # find which option is smaller 
         return a
     else: 
         return b
         
 def obs_kmers(k, ex): 
-    ''' given a k value & sequence, returns the observed number of kmers'''
-    full_list = []
-    unique_list = []
-    count = 0
-    string = len(ex)
-    for i in range(1,string+1):
-        shortk = ex[(i-1):(i-1+k)]
-        if len(shortk) == k:
-            full_list.append(shortk)
+    ''' given a k value & sequence string, returns the observed number of kmers'''
+    full_list = [] # create empty data frame 
+    unique_list = [] # create empty data frame 
+    count = 0 # create empty counter 
+    string = len(ex) # calculate length of the string 
+    for i in range(1,string+1): # for i in a list of kmers the length of the string 
+        shortk = ex[(i-1):(i-1+k)] # pull out the kmer for the respective k value 
+        if len(shortk) == k: # only include kmers of the length we're looking at 
+            full_list.append(shortk) # add all kmers to a df 
     for item in full_list:
-        if item not in unique_list:
-            count += 1
+        if item not in unique_list: # add all unique kmers to a new df 
+            count += 1 # increase count by 1 if there is another unique value 
             unique_list.append(item)
     return(count)
 
 def write_df(ex):
-    '''creates a dataframe with k values, observed kmers and possible kmers, returns the linguistic complexity'''
-    data = []
-    string = len(ex)
-    for i in range(1, string+1):
-        k = i
-        data.append([obs_kmers(k, ex), poss_kmers(k, ex)])
-    df = pd.DataFrame(data, index = range(1,string+1), columns = ['observed_kmers', 'possible_kmers'])
+    '''creates a dataframe with k values, observed kmers and possible kmers and calculates totals'''
+    data = [] # create empty data frame 
+    string = len(ex) # caluclate length of string 
+    for i in range(1, string+1): # itterate for every possible length of k given the string 
+        k = i # store i as the k value (not needed but it helps with comprehension)
+        data.append([obs_kmers(k, ex), poss_kmers(k, ex)]) # calculate poss & obs kmers and add them to the df 
+    df = pd.DataFrame(data, index = range(1,string+1), columns = ['observed_kmers', 'possible_kmers']) # fill pandas df 
     df.loc['total']= df.sum() # adds totals to bottom row 
     return(df)
 
 def linguistic_complexity(df):
-    ling = df.loc['total','observed_kmers'] / df.loc['total','possible_kmers'] 
+    '''
+    calculates the linguistic complexity
+    '''
+    ling = df.loc['total','observed_kmers'] / df.loc['total','possible_kmers'] # divide to calculate linguistic complexity 
     return(ling)
   
 def main(args): 
-  out = []
+  out = [] #create empty df 
   for i in args.data:
-    df = write_df(i)
-    out = linguistic_complexity(df)
-    #print(i)
-    print(df)
-    print("The linguistic compleixty of", i, "is", out)
-    #print(out)
+    string = i # writes each line as a string 
+    x = string.rstrip() # removes the white space from the end of the string 
+    df = write_df(x) # writes the dataframe 
+    out = linguistic_complexity(df) # calculates the linguistic complexity
+    print(df) # prints the dataframe to the command line
+    print("The linguistic compleixty of", x, "is", out) # prints a message reading the linguistic complexity to command line 
     
 if __name__ == '__main__':
   parser = argparse.ArgumentParser()
