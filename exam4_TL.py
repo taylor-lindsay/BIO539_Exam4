@@ -5,7 +5,16 @@ import pandas as pd
 import argparse
 
 def poss_kmers(k, ex):
-    ''' given a k value & sequence string, returns the possible number of kmers '''
+    ''' 
+    Given a k value & sequence string, returns the possible number of kmers
+    
+    Parameters:
+    k (int): The length of kmer you are interested in
+    ex (str): The sequence string 
+    
+    Returns: 
+    integer: the number of possible kmers 
+    '''
     string = len(ex) #calculates length of string 
     a = string - k + 1 # one kmer calculation 
     b = 4**k # the other kmer calculation 
@@ -15,7 +24,16 @@ def poss_kmers(k, ex):
         return b
         
 def obs_kmers(k, ex): 
-    ''' given a k value & sequence string, returns the observed number of kmers'''
+    ''' 
+    Given a k value & sequence string, returns the observed number of kmers
+    
+    Parameters:
+    k (int): The length of kmer you are interested in
+    ex (str): The sequence string 
+    
+    Returns: 
+    integer: the number of observed kmers 
+    '''
     full_list = [] # create empty data frame 
     unique_list = [] # create empty data frame 
     count = 0 # create empty counter 
@@ -31,7 +49,16 @@ def obs_kmers(k, ex):
     return(count)
 
 def write_df(ex):
-    '''creates a dataframe with k values, observed kmers and possible kmers and calculates totals'''
+    '''
+    Creates a dataframe with k values, observed kmers and possible kmers and calculates totals
+    
+    Parameters:
+    ex (str): The sequence string 
+    
+    Returns: 
+    dataframe: a dataframe that contains the possible and observed kmers, and a total row
+    '''
+    
     data = [] # create empty data frame 
     string = len(ex) # caluclate length of string 
     for i in range(1, string+1): # itterate for every possible length of k given the string 
@@ -43,12 +70,28 @@ def write_df(ex):
 
 def linguistic_complexity(df):
     '''
-    calculates the linguistic complexity
+    Calculates the linguistic complexity from a dataframe 
+    
+    Parameters:
+    df (dataframe): A dataframe created by the write_df 
+    
+    Returns: 
+    ling (int): the linguistic complexity of a string 
     '''
     ling = df.loc['total','observed_kmers'] / df.loc['total','possible_kmers'] # divide to calculate linguistic complexity 
     return(ling)
   
 def main(args): 
+  '''
+  Given a data file in CSV file, it outputs new data frame in a CSV file and prints the linguistic complexity to the terminal window.
+  
+  Parameters:
+  Data File (CSV): A data file that contains a list of sequence strings 
+  
+  Returns: 
+  Dataframe (CSV): Creates a csv file 
+  Linguistic complexity (terminal message): Prints a message with the string & linguistic complexity of the string
+  '''
   out = [] #create empty df 
   for i in args.data:
     string = i # writes each line as a string 
