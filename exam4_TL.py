@@ -55,7 +55,7 @@ def main(args):
     x = string.rstrip() # removes the white space from the end of the string 
     df = write_df(x) # writes the dataframe 
     out = linguistic_complexity(df) # calculates the linguistic complexity
-    print(df) # prints the dataframe to the command line
+    df.to_csv(i+'sequence.csv') # creates csv file
     print("The linguistic compleixty of", x, "is", out) # prints a message reading the linguistic complexity to command line 
     
 if __name__ == '__main__':
